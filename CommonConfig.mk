@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
--include device/sony/customization/Customization.mk
-
 # Common path
-COMMON_PATH := device/sony/common
+COMMON_PATH := device/xiaomi/sdm845-common
 
 # Do not build proprietary capability
 TARGET_USES_AOSP := true
@@ -56,9 +54,6 @@ TARGET_2ND_CPU_VARIANT := generic
 # Use mke2fs to create ext4 images
 TARGET_USES_MKE2FS := true
 TARGET_USERIMAGES_USE_EXT4 := true
-
-BOARD_ROOT_EXTRA_FOLDERS := odm
-BOARD_ROOT_EXTRA_SYMLINKS += /mnt/vendor/persist:/persist
 
 # Filesystem
 TARGET_FS_CONFIG_GEN := $(COMMON_PATH)/config.fs
@@ -148,22 +143,7 @@ ifeq ($(HOST_OS),linux)
 endif
 WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY ?= true
 
-# Build kernel using kernel's Android.mk file.
-# May be overriden by KernelConfig.mk if prebuilt kernel present.
-# Can also be turned off in Customization.mk in case it is desired to use a
-# custom ROM's kernel build system, e.g. LineageOS' or PE's.
-BUILD_KERNEL ?= true
-
 -include $(KERNEL_PATH)/common-kernel/KernelConfig.mk
-
-ifeq ($(TARGET_NEEDS_DTBOIMAGE),true)
-ifeq ($(BUILD_KERNEL),true)
-BOARD_DTBO_IMAGE_NAME := dtbo-$(TARGET_DEVICE).img
-BOARD_PREBUILT_DTBOIMAGE ?= $(PRODUCT_OUT)/$(BOARD_DTBO_IMAGE_NAME)
-else
-BOARD_PREBUILT_DTBOIMAGE ?= kernel/sony/msm-$(SOMC_KERNEL_VERSION)/common-kernel/dtbo-$(TARGET_DEVICE).img
-endif
-endif
 
 # Include build helpers for QCOM proprietary
 -include vendor/qcom/proprietary/common/build/proprietary-build.mk
